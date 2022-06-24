@@ -1,0 +1,37 @@
+{% extends 'index.html' %}
+{% block title %} Receta {% endblock %}
+
+{% with messages = get_flashed_messages() %}
+      {% if messages %}
+      <br/>
+      {% for message in messages %}
+      <div class="alert alert-primary alert-dismissible" role="alert">
+        <li>{{message}}</li>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" ></button>
+      </div>
+      {% endfor %}
+      {% endif %}
+      {% endwith %}
+
+{% block content %}
+    <div>
+        <h1>Ingresar Receta</h1>
+        <form action = "{{ url_for('receta') }}" method = "post" class= "container">
+            <label for = "nombre">Nombre</label><br>
+            <input type = "text" name = "nombre" placeholder = "Receta" /><br> 
+            
+            <label for = "tiempo">Tiempo</label><br>
+            <input type = "number" name = "tiempo" placeholder = "Tiempo" /><br> 
+
+            <label for = "cantidad">Cantidad de ingredientes</label><br>
+            <input type = "number" name = "cantidad" placeholder = "Cantidad de ingredientes" /><br>
+
+            <label for = "descripcion">Descripcion</label><br>
+            <textarea type = "text" name = "descripcion" placeholder = "Descripcion" rows="10" cols="50"></textarea><br>	 
+
+            <input id="userId" name="usuario_id" type="hidden" value="{{ usuarioActual }}"> 
+
+            <input type = "submit" value = "Guardar" />
+        </form>
+    </div>
+{% endblock %}
