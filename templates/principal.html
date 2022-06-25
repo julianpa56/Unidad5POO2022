@@ -1,0 +1,9 @@
+{% extends 'base_template.html' %}
+
+{% block title %} Pantalla principal {% endblock %}
+
+{% block content %}
+<h1 class="pp-h1">Bienvenido</h1>
+    <a class="pp-btn-login" href = "{{ url_for('login') }}">Ingresar</a>
+
+{% endblock %}

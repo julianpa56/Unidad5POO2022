@@ -1,0 +1,13 @@
+{% extends 'base_template.html' %}
+{% block title %} Menu Principal {% endblock %}
+{% block content %}
+
+    <h1>Menu Principal</h1>
+    <div class="m-contenedor-menu">
+        <a href="{{ url_for('ranking') }}">Ranking</a>
+        <a href="{{ url_for('tiempoelaboracion') }}">Tiempo de elaboración</a>
+        <a href="{{ url_for('poringrediente') }}">Buscar por ingrediente</a>
+        <a href="{{ url_for('logout') }}">Cerrar Sesión</a>
+    </div>
+
+{% endblock %}

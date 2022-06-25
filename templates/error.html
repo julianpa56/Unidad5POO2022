@@ -1,5 +1,21 @@
-{% extends 'index.html' %}
+{% extends 'base_template.html' %}
 {% block title %} Error {% endblock %}
-{% end content %}
-<h1> {{ error }} </h1>
+{% block content %}
+    <h1> {{ error }} </h1>
+    {% if tipoError == 'receta' %}
+        <a class="err-btn-error" href = "{{ url_for('receta') }}">Volver</a>
+    {% endif %}
+
+    {% if tipoError == 'login' %}
+        <a class="err-btn-error" href = "{{ url_for('login') }}">Volver</a>
+    {% endif %}
+
+    {% if tipoError == 'ingrediente' %}
+        <a class="err-btn-error" href = "{{ url_for('ingrediente') }}">Volver</a>
+    {% endif %}
+
+    {% if tipoError == 'busqueda' %}
+        <a class="err-btn-error" href = "{{ url_for('login') }}">Volver</a>
+    {% endif %}
+
 {% endblock %}

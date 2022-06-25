@@ -1,4 +1,4 @@
-{% extends 'index.html' %}
+{% extends 'base_template.html' %}
 
 {% with messages = get_flashed_messages() %}
       {% if messages %}
@@ -15,16 +15,17 @@
 {% block title %} Login {% endblock %}
 {% block content %}
    <h1>Login</h1>
-   <hr/>        
-   <form action = "{{ request.path }}" method = "post" class = "container">
+   <div class="lg-contenedor-login">
+      <form action = "{{ request.path }}" method = "post" class = "container">
       
-      <label for = "email">Correo Electrónico</label><br>
-      <input type = "text" name = "email" placeholder = "email" /><br>
-      
-      <label for = "password">Contraseña</label><br>
-      <input type = "password" name = "password" placeholder = "password"/><br>
-      <br>
-      <input type = "submit" value = "Guardar" />
-      
-   </form>
+         <label for = "email">Correo Electrónico</label><br>
+         <input type = "text" name = "email" placeholder = "email" /><br>
+         
+         <label for = "password">Contraseña</label><br>
+         <input type = "password" name = "password" placeholder = "password"/><br>
+   
+         <button type="submit">Ingresar</button>
+         
+      </form>
+   </div>
 {% endblock %}

@@ -1,4 +1,4 @@
-{% extends 'index.html' %}
+{% extends 'base_template.html' %}
 {% block title %} Receta {% endblock %}
 
 {% with messages = get_flashed_messages() %}
@@ -14,7 +14,7 @@
       {% endwith %}
 
 {% block content %}
-    <div>
+    <div class="rt-contenedor-receta">
         <h1>Ingresar Receta</h1>
         <form action = "{{ url_for('receta') }}" method = "post" class= "container">
             <label for = "nombre">Nombre</label><br>
@@ -24,14 +24,14 @@
             <input type = "number" name = "tiempo" placeholder = "Tiempo" /><br> 
 
             <label for = "cantidad">Cantidad de ingredientes</label><br>
-            <input type = "number" name = "cantidad" placeholder = "Cantidad de ingredientes" /><br>
+            <input type = "number" name = "cantidad" placeholder = "Cantidad de ingredientes" min="1" max="10" /><br>
 
             <label for = "descripcion">Descripcion</label><br>
-            <textarea type = "text" name = "descripcion" placeholder = "Descripcion" rows="10" cols="50"></textarea><br>	 
+            <textarea type = "text" name = "descripcion" placeholder = "Descripcion" rows="10" cols="30"></textarea><br>	 
 
             <input id="userId" name="usuario_id" type="hidden" value="{{ usuarioActual }}"> 
 
-            <input type = "submit" value = "Guardar" />
+            <button type="submit">Guardar</button>
         </form>
     </div>
 {% endblock %}

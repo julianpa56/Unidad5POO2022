@@ -1,4 +1,4 @@
-{% extends 'index.html' %}
+{% extends 'base_template.html' %}
 {% block title %} Ingrediente {% endblock %}
 {% block content %}
     <div>
@@ -6,7 +6,7 @@
         <form action = "{{ url_for('ingrediente') }}" method = "post" class= "container">
 
             {% for i in range(cantidadIngredientes) %}
-            <label for = "nombreIngrediente{{i}}">Nombre</label><br>
+            <label for = "nombreIngrediente{{i}}">Nombre</label>
             <input type = "text" name = "nombreIngrediente{{i}}" placeholder = "Nombre" /><br> 
             
             <label for = "cantidad{{i}}">Cantidad</label><br>
