@@ -1,11 +1,8 @@
-<!DOCTYPE html>
-<html lang = "en">
-	<head>
-    <title>Aviso</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/estilos.css') }}">
-  </head> 
-   <body>
-     <h1> {{ mensaje }} </h1>
-	 
-   </body>
-</html>
+{% extends 'base_template.html' %}
+{% block title %} Menu Principal {% endblock %}
+{% block content %}
+
+    <h1> {{ mensaje }} </h1>
+    <a href="{{ url_for('menu') }}">Volver al menu principal</a>
+
+{% endblock %}

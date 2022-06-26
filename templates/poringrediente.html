@@ -1,0 +1,23 @@
+{% extends 'base_template.html' %}
+{% block title %} Buscar por ingrediente {% endblock %}
+{% block content %}
+
+    <form action="{{ url_for('poringrediente') }}" method="post">
+        <label for="nombreingrediente">Ingrese ingrediente a buscar</label>
+        <input type="text" name="nombreingrediente" id="">
+        <button type="submit">Buscar</button>
+    </form>
+
+    {% if condicion %}
+        <form action="{{ url_for('mostrar')}}" method="post">
+        {% for receta in listaRecetas %}
+            <input type="radio" name="idreceta" id="receta.id" value="{{receta.id}}">
+            <label for="idreceta">{{receta.nombre}}</label>            
+        {% endfor %}
+        <button type="submit">Mas informacion</button>
+        </form>
+    {% endif %}
+
+    <a href="{{ url_for('menu') }}">Volver al menu principal</a>
+
+{% endblock %}

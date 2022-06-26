@@ -8,12 +8,17 @@
             <input type="number" name="tiempolimite" placeholder="Tiempo">
             <button type="submit">Buscar</button>
         </form>
-    {% for receta in listarecetas %}
-        <div>
-            <h1>{{receta.nombre}}</h1>
-            <h2>{{receta.tiempo}}</h2>
-        </div>
-    {% endfor %}
+        
+        {% if condicion %}
+            <form action="{{ url_for('mostrar')}}" method="post">
+                {% for receta in listaRecetas %}
+                    <input type="radio" name="idreceta" id="receta.id" value="{{receta.id}}">
+                    <label for="idreceta">{{receta.nombre}}</label>            
+                {% endfor %}
+                <button type="submit">Mas informacion</button>
+            </form>
+        {% endif %}
+
     </div>
     <a href="{{ url_for('menu') }}">Volver al menu principal</a>
 {% endblock %}

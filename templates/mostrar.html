@@ -1,0 +1,22 @@
+{% extends 'base_template.html' %}
+{% block title %} Informacion de receta {% endblock %}
+{% block content %}
+    <h1>{{receta.nombre}}</h1>
+    <h4>Receta compartida por {{usuario.nombre}}</h4>
+    <h2>{{receta.tiempo}}</h2>
+    <p>{{receta.descripcion}}</p>
+    <ul>
+        {% for ingrediente in listaIngredientes %}
+        <li>{{ingrediente.nombre}} {{ingrediente.cantidad}} {{ingrediente.unidad}}</li>
+        {% endfor %}
+    </ul>
+
+    {% if usuario.id != usuarioActual %}
+        <form action="{{ url_for('megusta')}}" method="post">
+            <input type="radio" name="idreceta" id="receta.id" value="{{receta.id}}" type="hidden">            
+            <button type="submit">Me gusta</button>
+        </form>
+    {% endif %}
+    <a href="{{ url_for('menu') }}">Volver al menu principal</a>
+
+{% endblock %}

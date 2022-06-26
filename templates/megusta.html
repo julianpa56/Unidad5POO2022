@@ -1,0 +1,16 @@
+{% extends 'base_template.html' %}
+{% block title %} Votacion {% endblock %}
+
+{% block content %}
+    <h1>Votacion</h1>
+    <div>
+        <form action="{{ url_for('megusta')}}" method="post">
+            {% for receta in listaRecetas %}
+                <input type="radio" name="idreceta" id="receta.id" value="{{receta.id}}">
+                <label for="idreceta">{{receta.nombre}}</label>            
+            {% endfor %}
+            <button type="submit">Guardar</button>
+        </form>
+    </div>
+    <a href="{{ url_for('menu') }}">Volver al menu principal</a>
+{% endblock %}

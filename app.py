@@ -1,5 +1,6 @@
 from datetime import datetime
 import hashlib
+from sqlalchemy import desc, update
 
 from flask import Flask, request, render_template, Response, flash, get_flashed_messages, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
@@ -32,7 +33,7 @@ def login ():
             else:
                 verificacion = hashlib.md5(bytes(request.form['password'], encoding = 'utf-8'))
                 if (usuario_actual.clave == verificacion.hexdigest()):
-                    return render_template('receta.html', usuarioActual = usuario_actual.id)
+                    return render_template('menu.html')
                 else:
                     return render_template('error.html', error = 'La contraseña no es valida', tipoError= 'login')
     else:
@@ -47,13 +48,12 @@ def receta ():
         if not request.form['nombre'] or not request.form['tiempo'] or not request.form['descripcion']:
             return render_template('error.html', error='Contenido no ingresado')
         else:
-            nueva_receta = Receta(nombre = request.form['nombre'], tiempo = request.form['tiempo'], fecha = datetime.today(), elaboracion = request.form['descripcion'], cantidadmegusta = 0, usuarioid = request.form['usuario_id'])
+            idusuarioactual= usuario_actual.id
+            nueva_receta = Receta(nombre = request.form['nombre'], tiempo = request.form['tiempo'], fecha = datetime.today(), elaboracion = request.form['descripcion'], cantidadmegusta = 0, usuarioid = idusuarioactual)
             db.session.add( nueva_receta )
             db.session.commit()
-            flash('Receta agregada exitosamente')
-            cantidad = request.form['cantidad'] #obtengo la cantidad de ingredientes que se ingreso en el form
-            #receta_actual = Receta.query.filter_by(nombre = request.form['nombreReceta']).first()
-            return render_template('ingrediente.html', recetaActual = nueva_receta.id, cantidadIngredientes = int(cantidad)) #le envio al html para usar el for
+            cantidad = request.form['cantidad'] 
+            return render_template('ingrediente.html', recetaActual = nueva_receta.id, cantidadIngredientes = int(cantidad)) 
     else:
         return render_template('receta.html')
 
@@ -80,29 +80,21 @@ def ingrediente ():
 
 @app.route('/ranking/', methods = ['GET'])
 def ranking ():
-    # if usuario_actual == -1 and request.method == 'GET': # --------------------------------- VERIFICACION PARA NO INGRESAR SI NO ESTA LOGGEADO
+    # if usuario_actual == -1 and request.method == 'GET': #--------------------------- HABILITAR PARA INICIO DE SESION RESTRINGIDO
     #     return redirect(url_for('login'))
     if request.method == 'GET':
-        recetas= Receta.query.order_by(Receta.cantidadmegusta).limit(5).all()
+        recetas= Receta.query.order_by(desc(Receta.cantidadmegusta)).limit(5).all()
         return render_template('ranking.html', listarecetas= recetas)
 
 @app.route('/tiempoelaboracion/', methods = ['GET' , 'POST'])
 def tiempoelaboracion ():
-    # if usuario_actual == -1 and request.method == 'GET':
+    # if usuario_actual == -1 and request.method == 'GET': #--------------------------- HABILITAR PARA INICIO DE SESION RESTRINGIDO
     #     return redirect(url_for('login'))
     if request.method == 'POST':
         tiempo= int(request.form['tiempolimite'])
-        recetas= Receta.query.order_by(Receta.tiempo <= tiempo).all() # ----------------------- HAY QUE ARREGLAR EL FILTRADO 
-        return render_template('portiempo.html', listarecetas= recetas)
-    return render_template('portiempo.html')
-
-@app.route('/poringrediente/', methods = ['GET'])
-def poringrediente ():
-    # if usuario_actual == -1 and request.method == 'GET':
-    #     return redirect(url_for('login'))
-    if request.method == 'GET':
-        recetas= Receta.query.order_by(Receta.cantidadmegusta).limit(5).all()
-        return render_template('ranking.html', listarecetas= recetas)
+        recetas= Receta.query.filter(Receta.tiempo <= tiempo).all()  
+        return render_template('portiempo.html', listaRecetas= recetas,condicion= True)
+    return render_template('portiempo.html',condicion= False)
 
 @app.route('/logout/', methods = ['GET'])
 def logout ():
@@ -115,10 +107,57 @@ def logout ():
 
 @app.route('/menu/', methods = ['GET'])
 def menu ():
-    # if usuario_actual == -1 and request.method == 'GET':
+    # if usuario_actual == -1 and request.method == 'GET': #--------------------------- HABILITAR PARA INICIO DE SESION RESTRINGIDO
     #     return redirect(url_for('login'))
     if request.method == 'GET':
         return render_template('menu.html')
+
+@app.route('/megusta/', methods = ['GET', 'POST'])
+def megusta ():
+    # if usuario_actual == -1 and request.method == 'GET': #--------------------------- HABILITAR PARA INICIO DE SESION RESTRINGIDO
+    #     return redirect(url_for('login'))
+    if request.method == 'POST':
+        receta= Receta.query.filter_by(id = request.form['idreceta']).first()
+        actualizacion = (update(Receta)
+            .where(Receta.id == receta.id)
+            .values(cantidadmegusta=Receta.cantidadmegusta + 1)
+            )
+        db.session.execute(actualizacion)
+        db.session.commit()
+        return render_template('aviso.html', mensaje= 'Me gusta agregado')
+    else:
+        dato = db.session.query(Receta).order_by(Receta.nombre)
+        return render_template('megusta.html', listaRecetas = dato)
+
+@app.route('/mostrar/', methods = ['GET', 'POST'])
+def mostrar ():
+    # if usuario_actual == -1 and request.method == 'GET': #--------------------------- HABILITAR PARA INICIO DE SESION RESTRINGIDO
+    #     return redirect(url_for('login'))
+    if request.method == 'POST':
+        receta= Receta.query.filter_by(id = request.form['idreceta']).first()
+        usuario= Usuario.query.filter_by(id = receta.usuarioid).first()
+        ingredientes= Ingrediente.query.filter_by(recetaid= receta.id).all()
+        idusuario= usuario_actual.id
+        return render_template ('mostrar.html', receta= receta, usuario= usuario, listaIngredientes= ingredientes, usuarioActual=idusuario)
+    
+@app.route('/poringrediente/', methods = ['GET', 'POST'])
+def poringrediente ():
+    # if usuario_actual == -1 and request.method == 'GET': #--------------------------- HABILITAR PARA INICIO DE SESION RESTRINGIDO
+    #     return redirect(url_for('login'))
+    if request.method == 'POST':
+        listaIngredientes= Ingrediente.query.filter_by(nombre= request.form['nombreingrediente']).all()
+        listaRecetas=[]
+        auxlista=[]
+        for ing in listaIngredientes:
+            auxlista.append(int(ing.recetaid))
+        print(auxlista)
+        for aux in auxlista:
+            receta= Receta.query.filter(Receta.id == aux).first()
+            listaRecetas.append(receta)
+        return render_template('poringrediente.html',listaRecetas= listaRecetas, condicion = True)
+    return render_template('poringrediente.html',condicion= False)
+
+
 
 
 if __name__ == '__main__':
