@@ -2,14 +2,14 @@
 {% block title %} Ranking de recetas {% endblock %}
 
 {% block content %}
-    <div>
+    <div class="rk-contenedor-ranking">
     {% for receta in listarecetas %}
         <div>
             <h1>{{receta.nombre}}</h1>
-            <h2>{{receta.cantidadmegusta}}</h2>
+            <h2>Cantidad de MG: <span>{{receta.cantidadmegusta}}</span></h2>
         </div>
 
     {% endfor %}
     </div>
-    <a href="{{ url_for('menu') }}">Volver al menu principal</a>
+    <a class="btn-volver-menu" href="{{ url_for('menu') }}">Volver al menu principal</a>
 {% endblock %}
